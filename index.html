@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simulation</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<link rel="stylesheet" href="./main.css">
+</head>
+<body>
+	<div class="container-fluid" id="app">
+		<div class="row">
+			<div class="col-5 p-5">
+				<div class="h2 mb-5 text-center">Escalator Control System</div>
+				<div class="d-flex align-items-center justify-content-around">
+					<div class="escalator" :class="{ 'active': escalator.isWorking }">
+						<div class="text-center h1 mb-4">{{ escalator.l.direction }}</div>
+						<div class="d-flex w-100 justify-content-around align-items-center">
+							<div class="text-center h4 mb-0">{{ escalator.l.contain }}</div>
+							<div class="text-right w-25">
+								<div class="text-success">+{{ escalator.l.newGuests }}</div>
+								<div class="text-warning">-{{ escalator.l.left }}</div>
+							</div>
+						</div>
+					</div>
+					<div class="escalator" :class="{ 'active': escalator.isWorking }">
+						<div class="text-center h1 mb-4">{{ escalator.r.direction }}</div>
+						<div class="d-flex w-100 justify-content-around align-items-center">
+							<div class="text-center h4 mb-0">{{ escalator.r.contain }}</div>
+							<div class="text-right w-25">
+								<div class="text-success">+{{ escalator.r.newGuests }}</div>
+								<div class="text-warning">-{{ escalator.r.left }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-7 d-flex flex-column">
+				<div class="d-flex px-3 py-2 align-items-center">
+					<div class="mr-3">Simulation Panel</div>
+					<button class="btn btn-light" @click="startSimulation">START</button>
+					<button class="btn btn-light ml-2" @click="stopSimulation">STOP</button>
+					<button class="btn btn-light ml-2" @click="danger">Danger</button>
+
+					<input type="time" @change="addLog('Change Time')" class="ml-auto" v-model="time">
+				</div>
+				<div class="d-flex px-3 py-2 align-items-center">
+					<div class="mr-3">Control Panel</div>
+					<button class="btn btn-danger mr-2" :disabled="escalator.isWorking || escalator.l.contain !== 0 && escalator.r.contain !== 0" @click="startEscalator">Start</button>
+					<button class="btn btn-danger mr-2" :disabled="!escalator.isWorking" @click="stopEscalator">Stop</button>
+					<button class="btn btn-danger mr-2" :disabled="10 >= escalator.speed" @click="escalator.speed--">Speed Up</button>
+					<button class="btn btn-danger mr-2" :disabled="escalator.speed >= 20" @click="escalator.speed++">Speed Down</button>
+					<button class="btn btn-danger mr-2" :disabled="escalator.isWorking || escalator.l.contain !== 0 && escalator.r.contain !== 0" @click="changeDirection">Change Direction</button>
+				</div>
+				<div class="logs" v-if="logs.length">
+					<div v-for="(message, index) in logs" :key="index">
+						{{message}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="./app.js"></script>
+</body>
+</html>
